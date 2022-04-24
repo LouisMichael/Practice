@@ -3,6 +3,9 @@
 // FIRST TRY NO COMPILE ISSUES!!!!!!! FIRST TRY SUBMISSION NO ERRORS!!!!!!!
 
 // A good speedup I saw on looking at other solves is that we only need to do the math for the averge when we ask for the average time not every check in and because division is expensive this is important. 
+// Applying this got me to:
+// Runtime: 431 ms, faster than 60.26% of C# online submissions for Design Underground System.
+// Memory Usage: 60.6 MB, less than 42.31% of C# online submissions for Design Underground System.
 public class UndergroundSystem {
 // I think we want two datastructures
 //     one will be tasked with keeping track of who is currently riding so we can get a amount of time they are on board.
@@ -11,10 +14,10 @@ public class UndergroundSystem {
 // I think this will make sense as a map with the station pair as the key (entry station, exit station) and the number of people who have ridden and the current mean as a touple contents, this will let us update the mean easily
 //     new mean = ((old mean * old mean riders) + new rider time)/(old mean riders + 1[the new rider])
     private Dictionary<int, (string, int)> riderCheckins;
-    private Dictionary<(string, string), (double, int)> meanRideTimes;
+    private Dictionary<(string, string), (int, int)> meanRideTimes;
     public UndergroundSystem() {
         riderCheckins = new Dictionary<int, (string, int)>();
-        meanRideTimes = new Dictionary<(string, string), (double, int)>();
+        meanRideTimes = new Dictionary<(string, string), (int, int)>();
     }
     
     public void CheckIn(int id, string stationName, int t) {
@@ -27,16 +30,16 @@ public class UndergroundSystem {
         (string, string) key = (this.riderCheckins[id].Item1, stationName);
         int recentRideTime = t - this.riderCheckins[id].Item2;
         if(this.meanRideTimes.ContainsKey(key)){
-            this.meanRideTimes[key] = (((this.meanRideTimes[key].Item2 * this.meanRideTimes[key].Item1)+recentRideTime)/(this.meanRideTimes[key].Item2+1), this.meanRideTimes[key].Item2+1);
+            this.meanRideTimes[key] = (this.meanRideTimes[key].Item1 + recentRideTime, this.meanRideTimes[key].Item2+1);
         }
         else{
-            this.meanRideTimes[key] = ((double)recentRideTime, 1);
+            this.meanRideTimes[key] = (recentRideTime, 1);
         }
     }
     
     public double GetAverageTime(string startStation, string endStation) {
         (string, string) key = (startStation, endStation);
-        return this.meanRideTimes[key].Item1;
+        return ((double)this.meanRideTimes[key].Item1 / (double)this.meanRideTimes[key].Item2);
     }
 }
 
