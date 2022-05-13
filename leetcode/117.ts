@@ -22,38 +22,26 @@ public class Node {
 */
 
 public class Solution {
+//     a breath first traversal and adding to a datastucrue could be good
+//     I wonder if you can only store just the next one?
+    public Dictionary<int,Node> dictionary;
     public Node Connect(Node root) {
-        return this.ConnectNext(root, null);
-    }
-    
-    public Node ConnectNext(Node root, Node next){
-        if(root == null){
-            return root;
-        }
-        root.next = next;
-        Node rightChild = root.right;
-        if(rightChild == null){
-            rightChild = root.left;
-        }
-        this.ConnectNext(rightChild, this.FindNext(next));
-        if(root.right != null && root.left != null){
-            this.ConnectNext(root.left, root.right);
-        }
+        this.dictionary = new Dictionary<int, Node>();
+        this.ConnectRecur(root, 0);
         return root;
     }
     
-    public Node FindNext(Node root){
-        if(root == null){
-            return root;
-        }
-        if(root.left != null){
-            return root.left;
-        }
-        if(root.right != null){
-            return root.right;
+    public void ConnectRecur(Node root, int level) {
+        if(root == null)
+            return;
+        if(this.dictionary.ContainsKey(level)){
+            root.next = this.dictionary[level];
+            this.dictionary[level] = root;
         }
         else{
-            return this.FindNext(root.next);
+            this.dictionary[level] = root;
         }
+        this.ConnectRecur(root.right, level + 1);
+        this.ConnectRecur(root.left, level + 1);
     }
 }
