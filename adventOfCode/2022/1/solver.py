@@ -47,12 +47,12 @@
 # In the example above, the top three Elves are the fourth Elf (with 24000 Calories), then the third Elf (with 11000 Calories), then the fifth Elf (with 10000 Calories). The sum of the Calories carried by these three elves is 45000.
 
 # Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?
-f = open("input.txt","r")
+f = open("input.txt","r", encoding="utf-8")
 lines = f.readlines()
 curElfCalCount = 0
 elfCalCounts = []
 for line in lines:
-    if(line == '\n'):
+    if line == '\n':
         elfCalCounts.append(curElfCalCount)
         curElfCalCount = 0
     else:
