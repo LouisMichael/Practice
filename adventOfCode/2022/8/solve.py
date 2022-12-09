@@ -96,105 +96,104 @@ with open("input.txt","r", encoding="utf-8") as f:
     print(totalVisible)
 
 # part 2
-"""
---- Part Two ---
-Content with the amount of tree cover available, the Elves just need to know the best spot to build their tree house: they would like to be able to see a lot of trees.
+# --- Part Two ---
+# Content with the amount of tree cover available, the Elves just need to know the best spot to build their tree house: they would like to be able to see a lot of trees.
 
-To measure the viewing distance from a given tree, look up, down, left, and right from that tree; stop if you reach an edge or at the first tree that is the same height or taller than the tree under consideration. (If a tree is right on the edge, at least one of its viewing distances will be zero.)
+# To measure the viewing distance from a given tree, look up, down, left, and right from that tree; stop if you reach an edge or at the first tree that is the same height or taller than the tree under consideration. (If a tree is right on the edge, at least one of its viewing distances will be zero.)
 
-The Elves don't care about distant trees taller than those found by the rules above; the proposed tree house has large eaves to keep it dry, so they wouldn't be able to see higher than the tree house anyway.
+# The Elves don't care about distant trees taller than those found by the rules above; the proposed tree house has large eaves to keep it dry, so they wouldn't be able to see higher than the tree house anyway.
 
-In the example above, consider the middle 5 in the second row:
+# In the example above, consider the middle 5 in the second row:
 
-30373
-25512
-65332
-33549
-35390
-Looking up, its view is not blocked; it can see 1 tree (of height 3).
-Looking left, its view is blocked immediately; it can see only 1 tree (of height 5, right next to it).
-Looking right, its view is not blocked; it can see 2 trees.
-Looking down, its view is blocked eventually; it can see 2 trees (one of height 3, then the tree of height 5 that blocks its view).
-A tree's scenic score is found by multiplying together its viewing distance in each of the four directions. For this tree, this is 4 (found by multiplying 1 * 1 * 2 * 2).
+# 30373
+# 25512
+# 65332
+# 33549
+# 35390
+# Looking up, its view is not blocked; it can see 1 tree (of height 3).
+# Looking left, its view is blocked immediately; it can see only 1 tree (of height 5, right next to it).
+# Looking right, its view is not blocked; it can see 2 trees.
+# Looking down, its view is blocked eventually; it can see 2 trees (one of height 3, then the tree of height 5 that blocks its view).
+# A tree's scenic score is found by multiplying together its viewing distance in each of the four directions. For this tree, this is 4 (found by multiplying 1 * 1 * 2 * 2).
 
-However, you can do even better: consider the tree of height 5 in the middle of the fourth row:
+# However, you can do even better: consider the tree of height 5 in the middle of the fourth row:
 
-30373
-25512
-65332
-33549
-35390
-Looking up, its view is blocked at 2 trees (by another tree with a height of 5).
-Looking left, its view is not blocked; it can see 2 trees.
-Looking down, its view is also not blocked; it can see 1 tree.
-Looking right, its view is blocked at 2 trees (by a massive tree of height 9).
-This tree's scenic score is 8 (2 * 2 * 1 * 2); this is the ideal spot for the tree house.
+# 30373
+# 25512
+# 65332
+# 33549
+# 35390
+# Looking up, its view is blocked at 2 trees (by another tree with a height of 5).
+# Looking left, its view is not blocked; it can see 2 trees.
+# Looking down, its view is also not blocked; it can see 1 tree.
+# Looking right, its view is blocked at 2 trees (by a massive tree of height 9).
+# This tree's scenic score is 8 (2 * 2 * 1 * 2); this is the ideal spot for the tree house.
 
-Consider each tree on your map. What is the highest scenic score possible for any tree?
-"""
+# Consider each tree on your map. What is the highest scenic score possible for any tree?
 
-# So intead of walking through to see if I mark off each tree I can instead keep a running multiplyer and update it as 
-# I check differnt directions
-with open("test.txt","r", encoding="utf-8") as f:
+
+with open("input.txt","r", encoding="utf-8") as f:
     lines = f.readlines()
     scoreGrid = []
     maxScore = 0
     # left to right
-    for val in range(len(lines)):
-        visibleGrid.append([])
-        maxSeen = -1
-        for char in lines[val].strip():
-            if int(char) > maxSeen:
-                visibleGrid[val].append(True)
-                totalVisible += 1
-                print("from the left found: " + char)
-                maxSeen = int(char)
-            else:
-                visibleGrid[val].append(False)
-        
+    for val, line in enumerate(lines):
+        scoreGrid.append([])
+        for pos, char in enumerate(line.strip()):
+            curHeight = int(char)
+            shorterCount = 0
+            for backPos in range(pos-1,-1,-1):
+                if(curHeight > int(line.strip()[backPos])):
+                    shorterCount += 1
+                else:
+                    shorterCount += 1
+                    break
+            scoreGrid[val].append(shorterCount)
+    print(scoreGrid)
     # right to left
-    for val in range(len(lines)):
-        maxSeen = -1
-        strippedLine = lines[val].strip()
-        for lineVal in range(len(strippedLine)):
-            pos = len(strippedLine)-lineVal-1
-            if int(strippedLine[pos]) > maxSeen:
-                if not visibleGrid[val][pos]:
-                    visibleGrid[val][pos] = True
-                    totalVisible += 1
-                    print("from the right found: " + str(strippedLine[pos]))
-                maxSeen = int(int(strippedLine[pos]))
-
+    for val, line in enumerate(lines):
+        strippedLine = line.strip()
+        reversedStrippedLine = strippedLine[::-1]
+        for pos,char in enumerate(reversedStrippedLine):
+            curHeight = int(char)
+            shorterCount = 0
+            for backPos in range(pos-1,-1,-1):
+                if(curHeight > int(reversedStrippedLine[backPos])):
+                    shorterCount += 1
+                else:
+                    shorterCount += 1
+                    break
+            scoreGrid[val][len(reversedStrippedLine)-pos-1] *= shorterCount
+    print(scoreGrid)
     # top to bottom
-    maxSeenArray = []
-    for count in range(len(lines[0])):
-        maxSeenArray.append(-1)
-    for val in range(len(lines)):
-        
-        strippedLine = lines[val].strip()
-        
-        for lineVal in range(len(strippedLine.strip())):
-            charVal = int(strippedLine[lineVal])
-            if  charVal > maxSeenArray[lineVal]:
-                if not visibleGrid[val][lineVal]:
-                    visibleGrid[val][pos] = True
-                    totalVisible += 1
-                    print("from the top found: " + str(charVal))
-                maxSeenArray[lineVal] = charVal
+    for val, line in enumerate(lines):
+        strippedLine = line.strip()
+        for pos,char in enumerate(strippedLine):
+            curHeight = int(char)
+            shorterCount = 0
+            for backLine in range(val-1,-1,-1):
+                if(curHeight > int(lines[backLine][pos])):
+                    shorterCount += 1
+                else:
+                    shorterCount += 1
+                    break
+            scoreGrid[val][pos] *= shorterCount
+    print(scoreGrid)
     # bottom to top
-    lineCount = len(lines) - val - 1
-    maxSeenArray = []
-    for count in range(len(lines[0])):
-        maxSeenArray.append(-1)
-    for val in range(len(lines)):
-        curLine = len(lines) - val - 1
-        strippedLine = lines[curLine].strip()
-        for lineVal in range(len(strippedLine)):
-            charVal = int(strippedLine[lineVal])
-            if charVal > maxSeenArray[lineVal]:
-                if not visibleGrid[curLine][lineVal]:
-                    visibleGrid[curLine][pos] = True
-                    totalVisible += 1
-                    print("from the bottom found: " + str(charVal))
-                maxSeenArray[lineVal] = charVal
-    print(totalVisible)
+    reversedLines = lines[::-1]
+    for val, line in enumerate(reversedLines):
+        strippedLine = line.strip()
+        for pos,char in enumerate(strippedLine):
+            curHeight = int(char)
+            shorterCount = 0
+            for backLine in range(val-1,-1,-1):
+                if(curHeight > int(reversedLines[backLine][pos])):
+                    shorterCount += 1
+                else:
+                    shorterCount += 1
+                    break
+            scoreGrid[len(reversedLines)-val-1][pos] *= shorterCount
+            if scoreGrid[len(reversedLines)-val-1][pos] > maxScore:
+                maxScore = scoreGrid[len(reversedLines)-val-1][pos]
+    print(scoreGrid)
+    print(maxScore)
