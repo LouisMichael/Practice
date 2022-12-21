@@ -240,4 +240,71 @@
 # Simulate your complete hypothetical series of motions. How many positions does the tail of the rope visit at least once?
 
 # To begin, get your puzzle input.
+curHead = [0,0]
+curTail = [0,0]
+visited = {(0,0):True}
+directionalLookOffsets = [[0,2],[0,-2],[2,0],[-2,0],[-1,2],[1,2],[2,1],[2,-1],[-1,-2],[1,-2],[-2,1],[-2,-1],[-2,-2],[2,-2],[2,2],[-2,2]]
+directionalMoveOffsets = [[0,1],[0,-1],[1,0],[-1,0],[-1,1],[1,1],[1,1],[1,-1],[-1,-1],[1,-1],[-1,1],[-1,-1],[-1,-1],[1,-1],[1,1],[-1,1]]
+movesKey = {
+    'U':[0,1],
+    'D':[0,-1],
+    'R':[1,0],
+    'L':[-1,0]
+}
+def moveTail():
+    
+    # print(curHead)
+    for i, offset in enumerate(directionalLookOffsets):
+        if [curTail[0] + offset[0], curTail[1] + offset[1]] == curHead:
+            curTail[0] += directionalMoveOffsets[i][0]
+            curTail[1] += directionalMoveOffsets[i][1]
+            visited[(curTail[0],curTail[1])] = True
+            continue;
+    # print(curTail)
+    # print()
+        
+with open("input.txt","r", encoding="utf-8") as f:
+    lines = f.readlines()
+    for line in lines:
+        line = line.strip()
+        splitLine = line.split(' ')
+        for val in range(int(splitLine[1])):
+            curHead[0] += movesKey[splitLine[0]][0]
+            curHead[1] += movesKey[splitLine[0]][1]
+            moveTail()
+    print(len(visited))
+    # 6265 is too low
 
+
+# part two is with a longer rope, we follow the same rules though 
+# test2 is supposed to give 36
+rope = []
+visited = []
+for val in range(10):
+    rope.append([0,0])
+    visited.append({(0,0):True})
+def moveTailAtPos(pos):
+    curHead = rope[pos-1]
+    curTail = rope[pos]
+    # print(curHead)
+    for i, offset in enumerate(directionalLookOffsets):
+        if [curTail[0] + offset[0], curTail[1] + offset[1]] == curHead:
+            curTail[0] += directionalMoveOffsets[i][0]
+            curTail[1] += directionalMoveOffsets[i][1]
+            visited[pos][(curTail[0],curTail[1])] = True
+            continue;
+    # print(curTail)
+    # print()
+        
+with open("input.txt","r", encoding="utf-8") as f:
+    lines = f.readlines()
+    for line in lines:
+        line = line.strip()
+        splitLine = line.split(' ')
+        for val in range(int(splitLine[1])):
+            rope[0][0] += movesKey[splitLine[0]][0]
+            rope[0][1] += movesKey[splitLine[0]][1]
+            for val in range(1,10):
+                # print(val)
+                moveTailAtPos(val)
+    print(len(visited[9]))
