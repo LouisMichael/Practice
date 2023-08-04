@@ -1,14 +1,13 @@
-// tri that is for lower case english words
 public class Tri{
     public TriNode root;
-    public class Tri(){
-        this.root = new TriNode(''); 
+    public Tri(){
+        this.root = new TriNode(); 
     }
-    public void AddWord(sting word){
+    public void AddWord(string word){
         TriNode cur = this.root;
         for(int i = 0; i<word.Length; i++){
             if(cur.next[word[i]-'a'] == null){
-                cur.next[word[i]-'a'] = new TriNode(word[i]-'a');
+                cur.next[word[i]-'a'] = new TriNode(word[i]);
             }
             cur = cur.next[word[i]-'a'];
         }
@@ -43,14 +42,19 @@ public class Tri{
         }
         return retList;
     }
-   public class TriNode {
-       public char cur;
-       public TriNode[] next;
-       public bool isValid;
-       public TriNode(char newCur) {
-           this.isValid = false;
-           this.cur = newCur;
-           this.next = new TriNode[26]; 
-       }
-   } 
+ 
+}
+public class TriNode {
+    public char cur;
+    public TriNode[] next;
+    public bool isValid;
+    public TriNode() {
+        this.isValid = false;
+        this.next = new TriNode[26]; 
+    }
+    public TriNode(char newCur) {
+        this.isValid = false;
+        this.cur = newCur;
+        this.next = new TriNode[26]; 
+    }
 }
