@@ -37,15 +37,30 @@ for checkLine in checkLines:
                 if cantBefore in seen:
                     print(checkLine)
                     valid = False
-                    break
-            if not valid:
-                break
         seen.add(val)
-    if valid:
-        print(f'adding {checkLine}')
-        add = int(checkLine[(len(checkLine)//2) ])
-        print(add)
-        ret += add
+    if not valid:
+        print(f'sorting {checkLine}')
+        print(f'seen{seen}')
+        # I think we try to write top sort by making a graph
+        # first we have to get lists of only real dependcies
+        dependcieRemaining = {}
+        dependcieOf = {}
+        for val in checkLine:
+            if val in rules:
+                for mustAfter in rules[val]:
+                    if mustAfter in seen:
+                        print(f'val{val} mustAfter{mustAfter} seen {seen}')
+                        if mustAfter in dependcieOf:
+                            dependcieOf[mustAfter]+=1
+                        else:
+                            dependcieOf[mustAfter] = 1
+                        
+        print(f'dependcieRemaining {dependcieRemaining}')
+        print(f'dependcieOf {dependcieOf}')
+        for val in dependcieOf:
+            if dependcieOf[val] == len(checkLine)//2:
+                print(f'adding {val}')
+                ret += int(val)
 
 # for x in range(len(grid)):
 #     for y in range(len(grid[x])):
