@@ -26,9 +26,25 @@ with open("input/input.txt","r", encoding="utf-8") as f:
             startY = line.index('^')
             startX = i
         grid.append(list(line))
+
+visited = set()
+curX = startX
+curY = startY
+curDirection = 0
+while inBounds(curX,curY):
+    print(f'cur ({curX}, {curY})')
+    visited.add((curX,curY))
+    newX = directions[curDirection][0] + curX
+    newY = directions[curDirection][1] + curY
+    if inBounds(newX,newY) and grid[newX][newY] == '#':
+        curDirection = (curDirection + 1)%4
+    else:
+        curX = newX
+        curY = newY
+oringalPath = visited
 for x in range(len(grid)):
     for y in range(len(grid[x])):
-        if grid[x][y] == '.':
+        if grid[x][y] == '.' and (x,y) in oringalPath:
             grid[x][y] = '#'
         else:
             continue
