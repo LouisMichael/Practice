@@ -1,7 +1,7 @@
 import re
 import sys
 from collections import defaultdict
-from functools import lru_cache
+from functools import cache
 # Create a defaultdict with a default value of an empty list
 my_dict = defaultdict(list)
 
@@ -17,7 +17,7 @@ def inBounds(x,y):
     return True
 
 
-@lru_cache(maxsize=256)
+@cache
 def posList(lenth):
     if lenth == 0:
         return [""]

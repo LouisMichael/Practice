@@ -1,6 +1,7 @@
 import re
 import sys
 from collections import defaultdict
+from functools import cache
 
 # Create a defaultdict with a default value of an empty list
 my_dict = defaultdict(list)
