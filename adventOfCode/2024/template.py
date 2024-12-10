@@ -12,8 +12,8 @@ grid = []
 directions = [(1,0),(1,1),(0,1),(-1,1),(-1,0),(-1,-1),(1,-1),(0,-1)]
 # directions = [(1,0),(0,1),(-1,0),(0,-1)]
 
-def inBounds(x,y):
-    if x<0 or x >= len(grid) or y < 0 or y >= len(grid[x]):
+def inBounds(row,col):
+    if row<0 or  row>= len(grid) or col < 0 or col >= len(grid[row]):
         return False
     return True
 
