@@ -21,5 +21,6 @@ with open("input/input.txt","r", encoding="utf-8") as f:
     lines = f.readlines()
     for line in lines:
         line = line.strip()
+        grid.append(list(line))
 
 print(ret)
