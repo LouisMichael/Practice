@@ -3,6 +3,7 @@ import sys
 from collections import defaultdict
 from functools import cache
 import numpy as np
+import heapq
 
 # Create a defaultdict with a default value of an empty list
 my_dict = defaultdict(list)
