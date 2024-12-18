@@ -57,7 +57,17 @@ with open("input/input.txt","r", encoding="utf-8") as f:
         byteList.append((int(match.group(1)),int(match.group(2))))
 print(byteList)
 
-for i in range(numberOfObstical):
-    grid[byteList[i][1]][byteList[i][0]] = '#'
+
 printGrid()
 print(findShortestPath())
+
+# we can binary search for the number? 
+# we can start at a closed state with the graph in two parts and then add from the end until
+# we connect, when we connect is the last valid time to make the trip
+
+# start with a full board
+for i in range(len(byteList)):
+    grid[byteList[i][1]][byteList[i][0]] = '#'
+
+# set up our list of regions as a union find
+colorSet = defaultdict()
