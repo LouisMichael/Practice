@@ -70,4 +70,48 @@ for i in range(len(byteList)):
     grid[byteList[i][1]][byteList[i][0]] = '#'
 
 # set up our list of regions as a union find
-colorSet = defaultdict()
+colorSet = {}
+weights = defaultdict(lambda: 1)
+def find(a):
+    curA = colorSet[a]
+    while curA !=  colorSet[curA]:
+        curA = colorSet[curA]
+    return curA
+def union(a , b):
+    a = find(a)
+    b = find(b)
+    if weights[a] < weights[b]:
+        temp = a
+        a = b
+        b = temp
+    colorSet[b] = a
+
+for y in range(len(grid)):
+    for x in range(len(grid[y])):   
+        colorSet[(x,y)] = (x,y)
+
+
+for y in range(len(grid)):
+    for x in range(len(grid[y])):
+        if grid[y][x] != '#':
+            for direction in directions:
+                newX = direction[0]+x
+                newY = direction[1]+y
+                if inBounds(newX,newY):
+                    if grid[newY][newX] != '#':
+                        union((x,y),(newX,newY))
+for i in range(len(byteList)-1,-1,-1):
+    curByte = byteList[i]
+    grid[curByte[1]][curByte[0]] = '.'
+    colorSet[(curByte[0],curByte[1])] = (curByte[0],curByte[1])
+    for direction in directions:
+        newX = direction[0]+curByte[0]
+        newY = direction[1]+curByte[1]
+        if inBounds(newX,newY):
+            if grid[newY][newX] != '#':
+                union((curByte[0],curByte[1]),(newX,newY))
+    if find((0,0)) == find((len(grid)-1,len(grid[len(grid)-1])-1)):
+        print(i)
+        print(curByte)
+        break
+# print(colorSet)
